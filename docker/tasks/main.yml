@@ -1,0 +1,21 @@
+- name: install docker dependencies
+  apt: name={{item}} state=present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg2
+    - software-properties-common
+
+- name: include docker pgp
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: include docker repo
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
+    state: present
+
+- name: install docker engine
+  apt: name=docker-ce state=present

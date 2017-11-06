@@ -1,0 +1,6 @@
+- name: Jenkins Cookbook
+  hosts: debian
+  roles:
+    - nginx
+    - docker
+    - jenkins
