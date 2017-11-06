@@ -1,0 +1,4 @@
+- name: restart jenkins
+  docker_container:
+    name: jenkins
+    restart: yes

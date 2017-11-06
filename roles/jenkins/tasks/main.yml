@@ -1,0 +1,43 @@
+- name: create jenkins folder
+  file:
+    path: "{{ jenkins_home }}"
+    state: directory
+    mode: 0755
+    owner: 1000
+    group: 1000
+
+- name: create jenkins folder scripts
+  file:
+    path: "{{ jenkins_home }}/init.groovy.d"
+    state: directory
+    mode: 0755
+    owner: 1000
+    group: 1000
+
+- name: install pip
+  apt: name=python-pip state=present
+
+- name: install module docker-py
+  pip: name=docker-py state=present
+
+- name: create jenkins container
+  docker_container:
+    name: jenkins
+    image: docker.io/jenkins/jenkins:lts
+    pull: yes
+    state: started
+    volumes:
+      - "{{ jenkins_home }}:/var/jenkins_home:rw"
+    published_ports:
+      - "8080:8080"
+      - "50000:50000"
+    env: JAVA_OPTS='-Djenkins.install.runSetupWizard=false'
+
+- name: configure default users
+  template:
+    src: basic-security.groovy
+    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+    owner: 1000
+    group: 1000
+    mode: 0775
+  notify: restart jenkins
