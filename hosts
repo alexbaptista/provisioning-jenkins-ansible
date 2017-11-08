@@ -1,2 +1,2 @@
 [debian]
-127.0.0.1:2222 ansible_user=root ansible_become=yes
+127.0.0.1:2222 ansible_user=alex ansible_become=yes ansible_become_method=sudo
