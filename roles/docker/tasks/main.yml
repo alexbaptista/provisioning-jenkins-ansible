@@ -1,5 +1,7 @@
 - name: install docker dependencies
-  apt: name={{item}} state=present
+  apt:
+    name: "{{ item }}"
+    state: present
   with_items:
     - apt-transport-https
     - ca-certificates
@@ -18,4 +20,6 @@
     state: present
 
 - name: install docker engine
-  apt: name=docker-ce state=present
+  apt:
+    name: docker-ce
+    state: present

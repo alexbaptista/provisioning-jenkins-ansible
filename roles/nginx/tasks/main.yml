@@ -1,5 +1,7 @@
 - name: install nginx
-  apt: name=nginx state=present
+  apt:
+    name: nginx
+    state: present
 
 - name: create nginx jenkins logdir
   file:
@@ -8,5 +10,7 @@
     mode: 0755
 
 - name: install nginx jenkins template
-  template: src=jenkins.conf dest=/etc/nginx/conf.d/jenkins.conf
+  template:
+    src: jenkins.conf
+    dest: /etc/nginx/conf.d/jenkins.conf
   notify: restart nginx

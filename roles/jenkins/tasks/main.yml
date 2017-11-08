@@ -15,17 +15,19 @@
     group: 1000
 
 - name: install pip
-  apt: name=python-pip state=present
+  apt:
+    name: python-pip
+    state: present
 
 - name: install module docker-py
-  pip: name=docker-py state=present
+  pip:
+    name: docker-py
+    state: present
 
 - name: create jenkins container
   docker_container:
     name: jenkins
     image: docker.io/jenkins/jenkins:lts
-    pull: yes
-    state: started
     volumes:
       - "{{ jenkins_home }}:/var/jenkins_home:rw"
     published_ports:
@@ -33,11 +35,14 @@
       - "50000:50000"
     env: JAVA_OPTS='-Djenkins.install.runSetupWizard=false'
 
-- name: configure default users
+- name: copy custom groovy scripts
   template:
-    src: basic-security.groovy
-    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+    src: "{{ item }}"
+    dest: "{{ jenkins_home }}/init.groovy.d/{{ item }}"
     owner: 1000
     group: 1000
     mode: 0775
+  with_items:
+    - A-plugins.groovy
+    - B-security.groovy
   notify: restart jenkins
