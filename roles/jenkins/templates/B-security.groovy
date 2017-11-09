@@ -30,5 +30,8 @@ else {
     // Enable Slave to Master Access
     // https://wiki.jenkins.io/display/JENKINS/Slave+To+Master+Access+Control
     instance.getInjector().getInstance(AdminWhitelistRule.class).setMasterKillSwitch(false)
+    // Enable CSRF protection
+    // https://wiki.jenkins.io/display/JENKINS/CSRF+Protection
+    instance.setCrumbIssuer(new DefaultCrumbIssuer(true))
     instance.save()
 }
