@@ -1,0 +1,48 @@
+- name: Create ec2 security group
+  ec2_group:
+    name: "{{ security_group_name }}"
+    state: present
+    description: Rules for jenkins stack
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    rules:
+      - proto: tcp
+        ports:
+          - 80
+          - 50000
+          - 443
+          - 22
+        cidr_ip: 0.0.0.0/0
+  register: ec2_sec_group
+
+- name: Create ec2 machine
+  ec2:
+    key_name: "{{ key_name }}"
+    instance_type: "{{ instance_type }}"
+    region: "{{ aws_region }}"
+    image: "{{ ami_id }}"
+    wait: yes
+    exact_count: 1
+    count_tag: 1
+    group_id: "{{ ec2_sec_group.group_id }}"
+    vpc_subnet_id: "{{ vpc_subnet_id }}"
+    assign_public_ip: yes
+    instance_tags:
+       Name: Jenkins
+       function: master
+       ansible: True
+    volumes:
+      - device_name: "xvda"
+        volume_size: 10
+        volume_type: "gp2"
+        delete_on_termination: true
+  register: ec2_machine
+
+- name: Wait for SSH to come up
+  wait_for:
+    host: "{{ item.public_dns_name }}"
+    port: 22
+    delay: 30
+    timeout: 320
+    state: started
+  with_items: "{{ ec2_machine.instances }}"

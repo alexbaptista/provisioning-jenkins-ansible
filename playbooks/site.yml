@@ -1,6 +1,5 @@
-- name: Jenkins Cookbook
-  hosts: debian
+- name: create AWS instances
+  gather_facts: False
+  hosts: localhost
   roles:
-    - nginx
-    - docker
-    - jenkins
+    - aws

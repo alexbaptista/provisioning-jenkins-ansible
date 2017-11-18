@@ -1,0 +1,6 @@
+- name: create Jenkins stack
+  hosts: tag_Name_Jenkins
+  roles:
+    - nginx
+    - docker
+    - jenkins
