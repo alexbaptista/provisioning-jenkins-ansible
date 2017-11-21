@@ -31,7 +31,7 @@
     volumes:
       - "{{ jenkins_home }}:/var/jenkins_home:rw"
     published_ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
       - "50000:50000"
     env: JAVA_OPTS='-Djenkins.install.runSetupWizard=false'
 
